@@ -1,14 +1,11 @@
-import Navbar from "./components/layout/navbar/Navbar";
-import Cart from "./components/pages/cart/Cart";
-import Home from "./components/pages/home/Home";
+import { BrowserRouter } from "react-router-dom";
+import AppRouter from "./routes/appRouter";
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <Cart />
-      <Home />
-    </div>
+    <BrowserRouter>
+      <AppRouter />
+    </BrowserRouter>
   );
 }
 

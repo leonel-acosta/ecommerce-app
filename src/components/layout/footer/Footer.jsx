@@ -1,7 +1,14 @@
-import React from "react";
+import { Grid, Typography } from "@mui/material";
+import "./Footer.css";
 
 const Footer = () => {
-  return <div>Footer</div>;
+  return (
+    <>
+      <Grid container className="footer">
+        <Typography>2023. Diseñado y desarrollado por Leonel Acosta</Typography>
+      </Grid>
+    </>
+  );
 };
 
 export default Footer;

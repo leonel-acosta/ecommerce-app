@@ -1,47 +1,73 @@
 import { createContext, useState } from "react";
 
-// contexto
 export const CartContext = createContext();
 
-// proveedor
-const CartContextProvider = ({ children }) => {
-  const [cart, setCart] = useState([]); // aca se agregan los valores
+const CartContextComponent = ({ children }) => {
+  const [cart, setCart] = useState([]);
+
   const addToCart = (item) => {
     const existe = isInCart(item.id);
+
     if (existe) {
       let newArray = cart.map((elemento) => {
+        // [{1}, {}, {3}]
         if (elemento.id === item.id) {
-          return { ...elemento, quantity: elemento.quantity + item.quantity };
+          return { ...elemento, quantity: item.quantity };
         } else {
           return elemento;
         }
       });
+
       setCart(newArray);
     } else {
-      setCart([...cart, item]); //esto es la alternativa a un push a través del setter
-      console.log("Added to cart", item.id);
+      setCart([...cart, item]);
     }
   };
+
   const clearCart = () => {
     setCart([]);
-    console.log("Cart cleared");
   };
 
   const deleteById = (id) => {
     let newArray = cart.filter((elemento) => elemento.id !== id);
     setCart(newArray);
-    console.log("Deleted:", id);
   };
 
-  // verifica si el producto esta en el carrito
   const isInCart = (id) => {
     let exist = cart.some((elemento) => elemento.id === id);
     return exist;
   };
 
-  let data = { cart, addToCart, clearCart, deleteById };
+  const getTotalPrice = () => {
+    let total = cart.reduce((acc, elemento) => {
+      return acc + elemento.price * elemento.quantity;
+    }, 0);
+    return total;
+  };
 
-  return <CartContext.Provider value={data}> {children} </CartContext.Provider>;
+  const getTotalQuantity = () => {
+    let total = cart.reduce((acc, elemento) => {
+      return acc + elemento.quantity;
+    }, 0);
+    return total;
+  };
+
+  const getQuantityById = (id) => {
+    const product = cart.find((elemento) => elemento.id === id);
+    return product?.quantity;
+  };
+
+  let data = {
+    cart,
+    addToCart,
+    clearCart,
+    deleteById,
+    getTotalPrice,
+    getTotalQuantity,
+    getQuantityById,
+  };
+
+  return <CartContext.Provider value={data}>{children}</CartContext.Provider>;
 };
 
-export default CartContextProvider;
+export default CartContextComponent;

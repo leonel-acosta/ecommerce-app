@@ -1,37 +1,41 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 // import { products } from "../../../catalogo";
 import { useParams } from "react-router-dom";
 import ItemCountContainer from "../../common/itemCount/ItemCountContainer";
 import { Card, CardMedia, Grid, Typography } from "@mui/material";
 import { db } from "../../../firebaseConfig";
 import { getDoc, collection, doc } from "firebase/firestore";
+import { CartContext } from "../../../context/CartContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const ItemDetail = () => {
-  const [producto, setProducto] = useState({});
-
+const ItemDetailContainer = () => {
   const { id } = useParams();
+  const [producto, setProduct] = useState({});
+
+  const { addToCart, getQuantityById } = useContext(CartContext);
 
   useEffect(() => {
     let productsCollection = collection(db, "products");
     let productRef = doc(productsCollection, id);
     getDoc(productRef).then((res) => {
-      setProducto({ ...res.data(), id: res.id });
+      setProduct({ ...res.data(), id: res.id });
     });
   }, [id]);
-
-  // useEffect(() => {
-  //   let productoSeleccionado = products.find((elemento) => elemento.id === +id);
-  //   const tarea = new Promise((res, rej) => {
-  //     res(productoSeleccionado);
-  //   });
-  //   tarea.then((res) => setProducto(res));
-  // }, [id]);
 
   const onAdd = (cantidad) => {
     let productCart = { ...producto, quantity: cantidad };
     addToCart(productCart);
-    console.log(producto);
-    console.log(cantidad);
+
+    toast.success("Agregado al carrito", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      theme: "light",
+    });
   };
 
   return (
@@ -70,9 +74,10 @@ const ItemDetail = () => {
           </Typography>
           <ItemCountContainer my={2} stock={producto.stock} onAdd={onAdd} />
         </Grid>
+        <ToastContainer />
       </Grid>
     </>
   );
 };
 
-export default ItemDetail;
+export default ItemDetailContainer;

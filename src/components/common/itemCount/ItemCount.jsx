@@ -13,10 +13,16 @@ const ItemCount = ({ contador, sumar, restar, onAdd }) => {
         direction: "row",
       }}
     >
-      <Button onClick={restar}>-</Button>
+      <Button onClick={restar} variant="secondary">
+        -
+      </Button>
       {contador}
-      <Button onClick={sumar}>+</Button>
-      <Button onClick={() => onAdd(contador)}>Agregar</Button>
+      <Button onClick={sumar} variant="secondary">
+        +
+      </Button>
+      <Button variant="contained secondary" onClick={() => onAdd(contador)}>
+        Agregar
+      </Button>
     </div>
   );
 };

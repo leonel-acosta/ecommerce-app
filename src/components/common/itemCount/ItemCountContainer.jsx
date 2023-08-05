@@ -15,12 +15,14 @@ const ItemCountContainer = ({ stock, onAdd }) => {
   };
 
   return (
+    <>
     <ItemCount
       contador={contador}
       sumar={sumar}
       restar={restar}
       onAdd={onAdd}
     />
+    </>
   );
 };
 

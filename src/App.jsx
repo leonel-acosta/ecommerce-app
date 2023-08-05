@@ -1,13 +1,15 @@
-import Navbar from "./Navbar";
+import { BrowserRouter } from "react-router-dom";
+import AppRouter from "./routes/appRouter";
+import CartContextComponent from "./context/CartContext";
+
 function App() {
-
-  return ( <div>
-    <Navbar />
-
-    <h1> Hola </h1>
-    </div>
-
-  )
+  return (
+    <BrowserRouter>
+      <CartContextComponent>
+        <AppRouter />
+      </CartContextComponent>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

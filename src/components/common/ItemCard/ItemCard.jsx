@@ -15,42 +15,48 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ItemCard = ({ elemento, isInItemList = true }) => {
   const { addToCart, getQuantityById } = useContext(CartContext);
-
+  
   const onAdd = (cantidad) => {
     let productCart = { ...elemento, quantity: cantidad };
     addToCart(productCart);
+
     toast.success("Agregado al carrito", {
       position: "top-right",
       autoClose: 2000,
-      hideProgressBar: false,
+      hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: false,
       theme: "light",
     });
   };
+
   return (
-    <Card sx={{ width: 300 }}>
-      <CardMedia
-        component="img"
-        alt={elemento.title}
-        image={elemento.pictureUrl}
-      />
-      <CardContent>
-        <Typography variant="body1" size="small">
-          {elemento.category}
-        </Typography>
-        <Typography variant="h5">{elemento.title}</Typography>
-        <Typography variant="h6">$ {elemento.price}</Typography>
-      </CardContent>
-      <CardActions>
-        <Link to={`/ItemDetail/${elemento.id}`}>
-          <Button size="large">Ver detalles</Button>
-        </Link>
-      </CardActions>
-      <ItemCountContainer stock={elemento.stock} onAdd={onAdd} />
-      <ToastContainer />
-    </Card>
+    <>
+      <Card sx={{ width: 300 }}>
+        <CardMedia
+          component="img"
+          alt={elemento.title}
+          image={elemento.pictureUrl}
+        />
+        <CardContent>
+          <Typography variant="body1" size="small">
+            {elemento.category}
+          </Typography>
+          <Typography variant="h5">{elemento.title}</Typography>
+          <Typography variant="h6">$ {elemento.price}</Typography>
+        </CardContent>
+        <CardActions>
+          <Link to={`/product/${elemento.id}`} key={elemento.id}>
+            <Button size="large" variant="secondary">
+              Ver detalles
+            </Button>
+          </Link>
+        </CardActions>
+        <ItemCountContainer stock={elemento.stock} onAdd={onAdd} />
+        <ToastContainer />
+      </Card>
+    </>
   );
 };
 

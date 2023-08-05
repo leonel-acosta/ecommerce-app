@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ItemDetailContainer = () => {
   const { id } = useParams();
-  const [producto, setProduct] = useState({});
+  const [producto, setProducto] = useState({});
 
   const { addToCart, getQuantityById } = useContext(CartContext);
 
@@ -19,7 +19,7 @@ const ItemDetailContainer = () => {
     let productsCollection = collection(db, "products");
     let productRef = doc(productsCollection, id);
     getDoc(productRef).then((res) => {
-      setProduct({ ...res.data(), id: res.id });
+      setProducto({ ...res.data(), id: res.id });
     });
   }, [id]);
 
@@ -30,7 +30,7 @@ const ItemDetailContainer = () => {
     toast.success("Agregado al carrito", {
       position: "top-right",
       autoClose: 2000,
-      hideProgressBar: false,
+      hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: false,

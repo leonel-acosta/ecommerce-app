@@ -59,10 +59,10 @@ const CartContainer = () => {
 
       {cart.length > 0 && <Button onClick={limpiar}>Limpiar carrito</Button>}
 
-      <Typography variant="h2">Total: {total}</Typography>
+      <Typography variant="h2">Total: ${total}</Typography>
 
       <Link to="/checkout">
-        <Button>Terminar compra</Button>
+        <Button variant="contained">Terminar compra</Button>
       </Link>
     </div>
   );

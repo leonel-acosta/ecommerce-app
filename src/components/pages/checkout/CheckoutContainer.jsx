@@ -11,12 +11,15 @@ import { CartContext } from "../../../context/CartContext";
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormLabel,
   Grid,
   TextField,
   Typography,
 } from "@mui/material";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const CheckoutContainer = () => {
   const [orderId, setOrderId] = useState("");
@@ -27,49 +30,59 @@ const CheckoutContainer = () => {
     name: "",
     phone: "",
     email: "",
+    newsletter: "",
+  });
+
+  const { handleSubmit, handleChange, errors } = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      phone: "",
+      newsletter: "",
+    },
+    onSubmit: (data) => {},
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .required("Campo obligatorio")
+        .min(10, "Ingrese su nombre y apellido")
+        .max(40),
+      email: Yup.string()
+        .email("Ingrese su correo electrónico")
+        .required("Campo obligatorio"),
+      phone: Yup.string().required("Campo obligatorio"),
+    }),
+    validateOnChange: false,
   });
 
   let total = getTotalPrice();
 
-  const handleSubmit = (evento) => {
-    evento.preventDefault();
+  // const ordersCollection = collection(db, "orders");
+  // addDoc(ordersCollection, order).then((res) => setOrderId(res.id));
 
-    let order = {
-      buyer: data,
-      items: cart,
-      total,
-      date: serverTimestamp(),
-    };
+  // cart.forEach((product) => {
+  //   updateDoc(doc(db, "products", product.id), {
+  //     stock: product.stock - product.quantity,
+  //   });
+  // });
 
-    const ordersCollection = collection(db, "orders");
-    addDoc(ordersCollection, order).then((res) => setOrderId(res.id));
+  // const handleChange = (evento) => {
+  //   setData({ ...data, [evento.target.name]: evento.target.value });
 
-    cart.forEach((product) => {
-      updateDoc(doc(db, "products", product.id), {
-        stock: product.stock - product.quantity,
-      });
-    });
-  };
+  // let refCollection = collection(db, "products", id);
+  // updateDoc(refDoc, { stock: product.stock - product.quantity });
 
-  const handleChange = (evento) => {
-    setData({ ...data, [evento.target.name]: evento.target.value });
+  // let refDoc = doc();
 
-    // let refCollection = collection(db, "products", id);
-    // updateDoc(refDoc, { stock: product.stock - product.quantity });
+  // forma correcta de actualizar el stock en FB
+  // cart.forEach((product) =>{updateDoc (doc(dv, "products", product.id), {stock: product.stock - product.quantity})})
 
-    // let refDoc = doc();
+  // LAS VALIDACIONES
 
-    // forma correcta de actualizar el stock en FB
-    // cart.forEach((product) =>{updateDoc (doc(dv, "products", product.id), {stock: product.stock - product.quantity})})
-
-    // LAS VALIDACIONES
-
-    // AXIOS.POST(URL, DATOS)
-    console.log(data);
-  };
+  // AXIOS.POST(URL, DATOS)
+  console.log(data);
 
   return (
-    <div>
+    <>
       <Typography variant="h2">Checkout</Typography>
       <Grid
         container
@@ -80,12 +93,10 @@ const CheckoutContainer = () => {
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "center",
-          padding: "10px 0 10px 0",
-          flexDirection: "row",
+          justifyContent: "left",
         }}
       >
-        <Grid container item xs={12} md={12} sm={12} direction="column">
+        <Grid container item xs={12} md={3} sm={6} px={2} direction="column">
           <Typography variant="h5">Su orden de compra:</Typography>
           {cart.map((product) => {
             return (
@@ -98,7 +109,7 @@ const CheckoutContainer = () => {
                   my={"1rem"}
                   sx={{ border: "1px solid grey" }}
                 >
-                  <Typography variant="h4">
+                  <Typography variant="h6">
                     {product.title} | Cantidad: {product.quantity}{" "}
                   </Typography>
                 </Box>
@@ -107,17 +118,19 @@ const CheckoutContainer = () => {
           })}
           <Typography variant="h4">Total: ${total}</Typography>
         </Grid>
-        <Grid container item xs={12} sm={12} direction="column">
+        <Grid container item xs={12} sm={3} md={3} direction="column">
           {orderId ? (
             <p>gracias por su compra</p>
           ) : (
-            <FormControl onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <FormLabel>Nombre completo</FormLabel>
               <TextField
                 type="text"
                 placeholder="Ingrese su nombre"
                 name="name"
                 onChange={handleChange}
+                error={errors.name ? true : false}
+                helperText={errors.name}
               />
 
               <FormLabel>Correo electrónico</FormLabel>
@@ -126,6 +139,8 @@ const CheckoutContainer = () => {
                 placeholder="Ingrese su email"
                 name="email"
                 onChange={handleChange}
+                error={errors.email ? true : false}
+                helperText={errors.email}
               />
               <FormLabel>Teléfono</FormLabel>
 
@@ -134,15 +149,25 @@ const CheckoutContainer = () => {
                 placeholder="Ingrese su teléfono"
                 name="phone"
                 onChange={handleChange}
+                error={errors.email ? true : false}
+                helperText={errors.email}
               />
+              <Grid container item xs={12} sm={12} md={12} direction="row">
+                <Checkbox
+                  type="checkbox"
+                  name="newsletter"
+                  onChange={handleChange}
+                />
+                <Typography>Suscribirse al newsletter</Typography>
+              </Grid>
               <Button type="submit" variant="contained">
                 Confirmar compra
               </Button>
-            </FormControl>
+            </form>
           )}
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };
 
